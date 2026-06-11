@@ -1,0 +1,10 @@
+# QA / dev screenshots
+_qa*.png
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+node_modules/
+__pycache__/
+*.pyc

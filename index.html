@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WHO-O-SITT — a weird game of suspicion</title>
+  <meta name="description" content="A strange, modern take on the classic guessing game. 2–4 players over your local network. Flip the tiles, ask the questions, unmask the monster." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="./assets/ui/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ===================== TITLE / MENU ===================== -->
+    <section id="screen-menu" class="screen is-active">
+      <div class="menu-art" aria-hidden="true"></div>
+      <div class="menu-card">
+        <div class="brand">
+          <svg class="logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <rect x="6" y="6" width="14" height="14" rx="3" stroke="currentColor" stroke-width="3"/>
+            <rect x="28" y="6" width="14" height="14" rx="3" stroke="currentColor" stroke-width="3" opacity="0.35"/>
+            <rect x="6" y="28" width="14" height="14" rx="3" stroke="currentColor" stroke-width="3" opacity="0.35"/>
+            <path d="M28 28h14v14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="35" cy="35" r="3.2" fill="currentColor"/>
+          </svg>
+          <h1 class="title">WHO-O-SITT<span class="qm">?</span></h1>
+        </div>
+        <p class="tagline">A weird game of suspicion for 2–4 players. Flip the tiles. Ask the questions. <strong>Unmask the monster.</strong></p>
+
+        <div class="menu-actions">
+          <button class="btn btn-primary" id="btn-host">Host a game</button>
+          <button class="btn" id="btn-join">Join with a code</button>
+        </div>
+        <button class="link-quiet" id="btn-how">How to play &amp; the twists</button>
+        <p class="net-note">Plays over your local network or the internet — no install, no account.</p>
+      </div>
+    </section>
+
+    <!-- ===================== HOST SETUP ===================== -->
+    <section id="screen-host" class="screen">
+      <div class="panel narrow">
+        <button class="link-quiet back" data-back>← Back</button>
+        <h2 class="h2">Host a game</h2>
+        <label class="field">
+          <span>Your name</span>
+          <input id="host-name" maxlength="14" placeholder="Detective…" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Deck</span>
+          <div class="deck-picker" id="deck-picker"></div>
+        </label>
+        <fieldset class="twists">
+          <legend>Twists</legend>
+          <label class="toggle"><input type="checkbox" id="tw-mutation" checked /> <span>Mutation rounds</span><em>Every 3rd turn, a trait morphs across the board.</em></label>
+          <label class="toggle"><input type="checkbox" id="tw-hunch" checked /> <span>Hunch tokens</span><em>Spend one for a fuzzy hot/cold answer.</em></label>
+          <label class="toggle"><input type="checkbox" id="tw-sabotage" checked /> <span>Sabotage (3–4p)</span><em>Once a game, force a rival to drop 2 tiles.</em></label>
+          <label class="toggle"><input type="checkbox" id="tw-sudden" checked /> <span>Sudden guess</span><em>Guess anytime — but a miss flips 4 tiles back up.</em></label>
+        </fieldset>
+        <button class="btn btn-primary" id="btn-create">Create room</button>
+      </div>
+    </section>
+
+    <!-- ===================== JOIN ===================== -->
+    <section id="screen-join" class="screen">
+      <div class="panel narrow">
+        <button class="link-quiet back" data-back>← Back</button>
+        <h2 class="h2">Join a game</h2>
+        <label class="field">
+          <span>Your name</span>
+          <input id="join-name" maxlength="14" placeholder="Detective…" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Room code</span>
+          <input id="join-code" maxlength="4" placeholder="ABCD" class="code-input" autocomplete="off" autocapitalize="characters" />
+        </label>
+        <button class="btn btn-primary" id="btn-do-join">Join room</button>
+        <p class="err" id="join-err" hidden></p>
+      </div>
+    </section>
+
+    <!-- ===================== LOBBY ===================== -->
+    <section id="screen-lobby" class="screen">
+      <div class="panel">
+        <h2 class="h2">Lobby</h2>
+        <div class="code-display">
+          <span class="code-label">ROOM CODE</span>
+          <span class="code-value" id="lobby-code">----</span>
+          <button class="link-quiet" id="btn-copy">copy</button>
+        </div>
+        <p class="muted" id="lobby-deck"></p>
+        <ul class="players" id="lobby-players" role="list"></ul>
+        <p class="muted small" id="lobby-hint">Waiting for players… you need 2–4.</p>
+        <button class="btn btn-primary" id="btn-start" hidden>Start the hunt</button>
+        <p class="muted small" id="lobby-wait" hidden>Waiting for the host to start…</p>
+      </div>
+    </section>
+
+    <!-- ===================== GAME ===================== -->
+    <section id="screen-game" class="screen">
+      <header class="game-top">
+        <button class="chip ghost" id="btn-peek" data-interactive>👁 Peek my identity</button>
+        <div class="turn-banner" id="turn-banner">—</div>
+        <div class="top-right">
+          <span class="chip stat" id="chip-hunch" title="Hunch tokens">🔮 <b id="hunch-n">0</b></span>
+          <button class="chip ghost" id="btn-rules" data-interactive>?</button>
+          <button class="chip ghost" data-theme-toggle aria-label="Toggle theme" data-interactive></button>
+        </div>
+      </header>
+
+      <main class="game-main">
+        <div class="board-wrap">
+          <div class="board" id="board"></div>
+        </div>
+      </main>
+
+      <aside class="rivals" id="rivals"></aside>
+
+      <footer class="action-bar" id="action-bar">
+        <div class="ab-left" id="ab-status">—</div>
+        <div class="ab-actions" id="ab-actions"></div>
+      </footer>
+    </section>
+  </div>
+
+  <!-- ===================== OVERLAYS ===================== -->
+  <div class="overlay" id="overlay-peek" hidden>
+    <div class="peek-card" id="peek-card">
+      <span class="peek-label">YOU ARE</span>
+      <img id="peek-img" alt="" />
+      <span class="peek-name" id="peek-name"></span>
+      <span class="peek-sub">Keep it secret. Don't get unmasked.</span>
+      <button class="btn" id="btn-peek-close">Got it</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-ask" hidden>
+    <div class="ask-card">
+      <h3 id="ask-title">Ask a question</h3>
+      <p class="muted small" id="ask-sub"></p>
+      <div class="ask-attrs" id="ask-attrs"></div>
+      <div class="ask-foot">
+        <label class="toggle inline" id="hunch-toggle-wrap"><input type="checkbox" id="ask-hunch" /> <span>Use a hunch 🔮 (hot/cold)</span></label>
+        <button class="link-quiet" id="btn-ask-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-answer" hidden>
+    <div class="answer-card" id="answer-card">
+      <span class="answer-q" id="answer-q"></span>
+      <span class="answer-big" id="answer-big"></span>
+      <button class="btn" id="btn-answer-ok">Flip the board</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-guess" hidden>
+    <div class="guess-card">
+      <h3>Make your accusation</h3>
+      <p class="muted small">Pick the rival, then the monster you think they are. Wrong = 4 tiles flip back up.</p>
+      <div class="guess-rivals" id="guess-rivals"></div>
+      <div class="guess-grid" id="guess-grid"></div>
+      <button class="link-quiet" id="btn-guess-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-end" hidden>
+    <div class="end-card">
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <span class="end-kicker">CASE CLOSED</span>
+      <h2 class="end-title" id="end-title">—</h2>
+      <img id="end-img" alt="" />
+      <p class="muted" id="end-sub"></p>
+      <button class="btn btn-primary" id="btn-rematch">Rematch</button>
+      <button class="link-quiet" id="btn-quit">Leave to menu</button>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay-how" hidden>
+    <div class="how-card">
+      <button class="link-quiet how-close" id="btn-how-close">✕</button>
+      <h2>How to play</h2>
+      <div class="how-body" id="how-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
