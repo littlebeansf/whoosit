@@ -1,6 +1,6 @@
 # WHO-O-SITT? 🔍👹
 
-A weird, modern multiplayer take on the classic **Guess Who?** board game — for **2–4 players** over your local network (or the internet). Flip the tiles, ask the questions, unmask the monster.
+A weird, modern take on the classic **Guess Who?** board game. Play **solo against AI detectives**, or go head-to-head with **2–4 players** over your local network (or the internet). Flip the tiles, ask the questions, unmask the monster.
 
 **Funny-but-modern cartoon art. Real board-game flip animations. Original twists that keep it from playing 1:1 like the original.**
 
@@ -27,6 +27,24 @@ Because it's WebRTC, it works on the **same Wi-Fi / LAN** *and* across the **int
 5. Once **2–4 players** are in the lobby, the host clicks **Start the hunt**.
 
 > Tip: For purely-offline LAN play with no internet at all, you'd need a self-hosted PeerJS broker — but for normal home/office Wi-Fi the default public broker works out of the box.
+
+---
+
+## Play vs AI (solo mode)
+
+No friends online? Hunt against the bots. Click **Play vs AI** from the menu, pick your name, a deck, **1–3 AI opponents**, and a difficulty. The whole match runs offline in your browser — no network, no room code.
+
+The bots are real opponents, not scripted dummies: each one keeps its **own candidate list**, sees only **public information** plus the answers to the questions *it* asked (it never peeks at your secret), and chooses questions that best split its remaining suspects. They flip their own tiles, spend hunch tokens, sabotage threatening rivals in 3–4-player games, and accuse when confident.
+
+### Difficulty tiers
+
+| Tier | Plays like |
+|------|-----------|
+| 🟢 **Rookie** | Learning the ropes. Asks loose questions, gambles on hasty guesses (and often whiffs, flipping tiles back up). Beatable. |
+| 🟡 **Sleuth** | Sharp, mostly-optimal deductions. Guesses only when the odds are good. A fair fight. |
+| 🔴 **Mastermind** | Cold and optimal. Always asks the best information-splitting question, never wastes a turn, and pounces the moment it's certain. Ruthless. |
+
+All twists (mutation rounds, hunch tokens, sabotage, sudden guess) are toggleable in solo mode too.
 
 ---
 
@@ -87,8 +105,12 @@ whoosit/
 │   ├── data/decks.js   # 3 decks × 16 characters, each with its own traits
 │   ├── net.js          # WebRTC P2P (PeerJS)
 │   ├── engine.js       # host-authoritative game logic + twists
+│   ├── bot.js          # AI opponent brain (solo / Play vs AI mode)
 │   ├── ui.js           # DOM rendering + animations
-│   └── main.js         # controller wiring net + engine + UI
+│   └── main.js         # controller wiring net + engine + UI + bots
+├── tools/
+│   ├── sim_bot.mjs     # headless bot-vs-bot game simulator
+│   └── winrate.mjs     # head-to-head difficulty win-rate tester
 ├── assets/
 │   ├── cryptid/        # c01–c16 character portraits
 │   └── ui/             # cover art, favicon

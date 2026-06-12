@@ -131,6 +131,22 @@ input{font:inherit;color:inherit}
 .deck-opt .dn{font-weight:700;font-size:var(--text-sm);font-family:var(--font-display)}
 .deck-opt .swatch{width:100%;height:6px;border-radius:99px;margin-top:6px}
 
+/* segmented control (opponent count) */
+.seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-2)}
+.seg-opt{padding:.7em var(--space-3);border:1px solid var(--border);border-radius:var(--radius-md);
+  background:var(--bg-2);font-weight:600;font-size:var(--text-sm);transition:border-color .18s,transform .14s var(--ease)}
+.seg-opt:hover{transform:translateY(-2px)}
+.seg-opt.sel{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 8%,var(--bg-2));color:var(--text)}
+
+/* difficulty picker */
+.diff-picker{display:grid;gap:var(--space-2)}
+.diff-opt{padding:var(--space-3) var(--space-4);border:1px solid var(--border);border-radius:var(--radius-md);
+  text-align:left;background:var(--bg-2);transition:border-color .18s,transform .14s var(--ease)}
+.diff-opt:hover{transform:translateY(-2px)}
+.diff-opt.sel{border-color:var(--accent);background:color-mix(in oklab,var(--accent) 8%,var(--bg-2))}
+.diff-opt .dn{font-weight:700;font-size:var(--text-base);font-family:var(--font-display)}
+.diff-opt .db{color:var(--text-faint);font-size:var(--text-xs);margin-top:2px}
+
 /* ---------- twists ---------- */
 .twists{border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-6)}
 .twists legend{padding:0 .5em;font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:600}

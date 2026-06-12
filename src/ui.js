@@ -318,14 +318,14 @@ export function renderLobby(code, players, deckId, isHost) {
 }
 
 // ---------- DECK PICKER ----------
-export function renderDeckPicker(selected, onSelect) {
-  const wrap = $('#deck-picker'); wrap.innerHTML = '';
+export function renderDeckPicker(selected, onSelect, sel = '#deck-picker') {
+  const wrap = $(sel); wrap.innerHTML = '';
   Object.values(DECKS).forEach((d) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'deck-opt' + (d.id === selected ? ' sel' : '');
     b.innerHTML = `<div class="dn">${d.name}</div><div class="swatch" style="background:${d.accent}"></div>`;
-    b.addEventListener('click', () => { onSelect(d.id); $$('#deck-picker .deck-opt').forEach((x) => x.classList.toggle('sel', x === b)); });
+    b.addEventListener('click', () => { onSelect(d.id); $$(sel + ' .deck-opt').forEach((x) => x.classList.toggle('sel', x === b)); });
     wrap.appendChild(b);
   });
 }

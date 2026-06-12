@@ -31,7 +31,8 @@
         <p class="tagline">A weird game of suspicion for 2–4 players. Flip the tiles. Ask the questions. <strong>Unmask the monster.</strong></p>
 
         <div class="menu-actions">
-          <button class="btn btn-primary" id="btn-host">Host a game</button>
+          <button class="btn btn-primary" id="btn-solo">Play vs AI</button>
+          <button class="btn" id="btn-host">Host a game</button>
           <button class="btn" id="btn-join">Join with a code</button>
         </div>
         <button class="link-quiet" id="btn-how">How to play &amp; the twists</button>
@@ -60,6 +61,42 @@
           <label class="toggle"><input type="checkbox" id="tw-sudden" checked /> <span>Sudden guess</span><em>Guess anytime — but a miss flips 4 tiles back up.</em></label>
         </fieldset>
         <button class="btn btn-primary" id="btn-create">Create room</button>
+      </div>
+    </section>
+
+    <!-- ===================== SOLO (VS AI) SETUP ===================== -->
+    <section id="screen-solo" class="screen">
+      <div class="panel narrow">
+        <button class="link-quiet back" data-back>← Back</button>
+        <h2 class="h2">Play vs AI</h2>
+        <label class="field">
+          <span>Your name</span>
+          <input id="solo-name" maxlength="14" placeholder="Detective…" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Deck</span>
+          <div class="deck-picker" id="solo-deck-picker"></div>
+        </label>
+        <label class="field">
+          <span>Opponents</span>
+          <div class="seg" id="solo-count" role="radiogroup" aria-label="Number of AI opponents">
+            <button type="button" class="seg-opt sel" data-count="1">1 bot</button>
+            <button type="button" class="seg-opt" data-count="2">2 bots</button>
+            <button type="button" class="seg-opt" data-count="3">3 bots</button>
+          </div>
+        </label>
+        <label class="field">
+          <span>Difficulty</span>
+          <div class="diff-picker" id="solo-diff"></div>
+        </label>
+        <fieldset class="twists">
+          <legend>Twists</legend>
+          <label class="toggle"><input type="checkbox" id="sw-mutation" checked /> <span>Mutation rounds</span><em>Every 3rd turn, a trait morphs across the board.</em></label>
+          <label class="toggle"><input type="checkbox" id="sw-hunch" checked /> <span>Hunch tokens</span><em>Spend one for a fuzzy hot/cold answer.</em></label>
+          <label class="toggle"><input type="checkbox" id="sw-sabotage" checked /> <span>Sabotage (3–4p)</span><em>Once a game, force a rival to drop 2 tiles.</em></label>
+          <label class="toggle"><input type="checkbox" id="sw-sudden" checked /> <span>Sudden guess</span><em>Guess anytime — but a miss flips 4 tiles back up.</em></label>
+        </fieldset>
+        <button class="btn btn-primary" id="btn-solo-start">Start the hunt</button>
       </div>
     </section>
 

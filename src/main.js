@@ -3,6 +3,8 @@
 
 import { Net } from './net.js';
 import { Game } from './engine.js';
+import { Bot, difficultyList } from './bot.js';
+import { DECKS } from './data/decks.js';
 import * as UI from './ui.js';
 
 const $ = (s) => document.querySelector(s);
@@ -17,6 +19,12 @@ const state = {
   snap: null,            // latest snapshot (both host & peer render from this)
   myName: 'Detective',
   candidateMode: false,
+  // ---- solo (vs AI) ----
+  solo: false,           // true when playing offline against bots
+  bots: {},              // botId -> Bot brain instance
+  soloCount: 1,          // number of AI opponents
+  soloDiff: 'sleuth',    // chosen difficulty
+  botBusy: false,        // guard so we drive one bot action at a time
 };
 
 // ---------- THEME TOGGLE ----------
@@ -44,10 +52,113 @@ const state = {
 UI.renderHow();
 $('#btn-host').onclick = () => { UI.renderDeckPicker(state.deckId, (id) => { state.deckId = id; UI.tintForDeck(id); }); UI.tintForDeck(state.deckId); UI.screens.show('host'); };
 $('#btn-join').onclick = () => UI.screens.show('join');
+$('#btn-solo').onclick = () => openSolo();
 $('#btn-how').onclick = () => ($('#overlay-how').hidden = false);
 $('#btn-how-close').onclick = () => ($('#overlay-how').hidden = true);
 $('#btn-rules').onclick = () => ($('#overlay-how').hidden = false);
 document.querySelectorAll('[data-back]').forEach((b) => (b.onclick = () => UI.screens.show('menu')));
+
+// ============================================================
+// SOLO MODE (PLAY VS AI) — offline, no network. Host game + bot brains.
+// ============================================================
+const BOT_NAMES = ['Bizzle', 'Marlow', 'Quincy', 'Sleuthbot'];
+
+function openSolo() {
+  UI.renderDeckPicker(state.deckId, (id) => { state.deckId = id; UI.tintForDeck(id); }, '#solo-deck-picker');
+  UI.tintForDeck(state.deckId);
+  // difficulty picker
+  const dp = $('#solo-diff'); dp.innerHTML = '';
+  difficultyList().forEach((d) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'diff-opt' + (d.id === state.soloDiff ? ' sel' : '');
+    b.innerHTML = `<div class="dn">${d.name}</div><div class="db">${d.blurb}</div>`;
+    b.onclick = () => { state.soloDiff = d.id; document.querySelectorAll('#solo-diff .diff-opt').forEach((x) => x.classList.toggle('sel', x === b)); };
+    dp.appendChild(b);
+  });
+  // opponent count segmented control
+  document.querySelectorAll('#solo-count .seg-opt').forEach((b) => {
+    b.onclick = () => {
+      state.soloCount = parseInt(b.dataset.count, 10);
+      document.querySelectorAll('#solo-count .seg-opt').forEach((x) => x.classList.toggle('sel', x === b));
+    };
+  });
+  UI.screens.show('solo');
+}
+
+$('#btn-solo-start').onclick = () => {
+  state.myName = ($('#solo-name').value || 'You').slice(0, 14);
+  state.twists = {
+    mutation: $('#sw-mutation').checked,
+    hunch: $('#sw-hunch').checked,
+    sabotage: $('#sw-sabotage').checked,
+    suddenGuess: $('#sw-sudden').checked,
+  };
+  state.solo = true;
+  state.isHost = true;   // human is the authoritative "host" locally
+  state.net = null;      // no network in solo
+  state.bots = {};
+
+  // build lobby: human first (seat 0), then N bots
+  state.lobby = [{ id: 'host', name: state.myName }];
+  for (let i = 0; i < state.soloCount; i++) {
+    const id = 'bot' + (i + 1);
+    const name = BOT_NAMES[i] || ('Bot ' + (i + 1));
+    state.lobby.push({ id, name, bot: true });
+    state.bots[id] = new Bot({ id, deckId: state.deckId, difficulty: state.soloDiff });
+  }
+  boardBuilt = false;
+  state.game = new Game({ deckId: state.deckId, players: state.lobby, twists: state.twists });
+  pushState();
+  UI.toast('The hunt begins!');
+};
+
+// Drive bots: after every state push, if it's a bot's turn, let it act.
+function maybeDriveBots(snap, events) {
+  if (!state.solo || !state.game || snap.phase === 'over') return;
+  // react to MY-as-victim events handled in applySnapshot; here we only act for bots
+  const turnId = snap.turnPlayer;
+  const bot = state.bots[turnId];
+  if (!bot || state.botBusy) return;
+  // if the bot just asked (pendingAnswer belongs to it), resolve flip + end turn instead
+  const pending = snap.pendingAnswer && snap.pendingAnswer.askerId === turnId;
+  if (pending) return; // handled by the 'asked' event path below
+  state.botBusy = true;
+  setTimeout(() => botTakeAction(turnId), bot.thinkDelay());
+}
+
+function botTakeAction(botId) {
+  state.botBusy = false;
+  if (!state.solo || !state.game) return;
+  const bot = state.bots[botId];
+  const snap = state.game.snapshotFor(botId); // bot sees only its own info
+  if (!bot || snap.phase === 'over' || snap.turnPlayer !== botId) return;
+  const intent = bot.decideTurn(snap);
+  if (!intent) { hostHandleIntent(botId, { kind: 'endTurn' }); return; }
+  if (intent.kind === 'ask') UI.toast(`${bot.deck.name ? '' : ''}${nameOf(botId)} is asking…`);
+  hostHandleIntent(botId, intent);
+}
+
+function nameOf(id) { const p = state.lobby.find((x) => x.id === id); return p ? p.name : id; }
+
+// When a bot's question gets answered, let the bot learn, flip, and end its turn.
+function botResolveAnswer(botId, ev) {
+  const bot = state.bots[botId];
+  if (!bot) return;
+  const snap = state.game.snapshotFor(botId);
+  // learn from the answer (yes/no only; hunch is fuzzy and not used to prune)
+  if (!ev.isHunch) bot.learn(ev.oppId, ev.attr, ev.value, ev.answer, snap.castState);
+  const tiles = bot.flipTiles(snap, ev);
+  setTimeout(() => {
+    if (tiles.length) hostHandleIntent(botId, { kind: 'flip', tiles });
+    // brief pause, then end turn (unless the game ended)
+    setTimeout(() => {
+      if (state.game && state.game.phase !== 'over' && state.game.current().id === botId) {
+        hostHandleIntent(botId, { kind: 'endTurn' });
+      }
+    }, 500);
+  }, bot.thinkDelay());
+}
 
 // ============================================================
 // HOSTING
@@ -132,11 +243,22 @@ function pushState(events = []) {
   // host view
   state.snap = state.game.snapshotFor('host');
   applySnapshot(state.snap, events, 'host');
-  // each peer
-  for (const p of state.lobby) {
-    if (p.id === 'host') continue;
-    const snap = state.game.snapshotFor(p.id);
-    state.net.sendTo(p.id, { t: 'state', snap, events });
+  // each peer (networked only)
+  if (state.net) {
+    for (const p of state.lobby) {
+      if (p.id === 'host' || p.bot) continue;
+      const snap = state.game.snapshotFor(p.id);
+      state.net.sendTo(p.id, { t: 'state', snap, events });
+    }
+  }
+
+  // SOLO: react to bot-relevant events, then drive whoever's turn it is.
+  if (state.solo) {
+    for (const ev of events) {
+      // a bot asked a question -> let it learn, flip, and end its turn
+      if (ev.type === 'asked' && state.bots[ev.askerId]) botResolveAnswer(ev.askerId, ev);
+    }
+    maybeDriveBots(state.snap, events);
   }
 }
 
@@ -214,17 +336,29 @@ function applySnapshot(snap, events, viewerId) {
     if (ev.type === 'asked' && ev.askerId === viewerId) {
       UI.showAnswer(snap, ev, (e) => beginFlipPhase(snap, e));
     }
+    // SOLO: surface what a bot just asked so the human can follow along
+    if (ev.type === 'asked' && state.solo && ev.askerId !== viewerId && state.bots[ev.askerId]) {
+      const deck = DECKS[snap.deckId];
+      const at = deck.attributes.find((a) => a.id === ev.attr);
+      const qtext = at ? at.q(ev.value) : 'a question';
+      if (ev.isHunch) UI.toast(`🔮 ${nameOf(ev.askerId)} played a hunch → ${ev.hot}`);
+      else UI.toast(`${nameOf(ev.askerId)} asked: “${qtext}” → ${ev.answer ? 'YES' : 'NO'}`);
+    }
     if (ev.type === 'turn' && ev.mutation) {
       UI.flashMutation(ev.mutation.cid);
       UI.toast('☣ Mutation! A trait shifted.');
     }
     if (ev.type === 'sabotage' && ev.victimId === viewerId) {
       UI.toast('💥 You were sabotaged! Two tiles forced down.');
+    } else if (ev.type === 'sabotage' && state.solo) {
+      UI.toast(`💥 ${nameOf(ev.byId)} sabotaged ${nameOf(ev.victimId)}!`);
     }
     if (ev.type === 'guess') {
       if (ev.correct && ev.oppId === viewerId) UI.toast('You were unmasked!');
       else if (ev.correct && ev.playerId === viewerId) UI.toast('🎯 Correct! Unmasked.');
       else if (!ev.correct && ev.playerId === viewerId) UI.toast('❌ Wrong — 4 tiles flipped back up.');
+      else if (state.solo && ev.correct) UI.toast(`🎯 ${nameOf(ev.playerId)} unmasked ${nameOf(ev.oppId)}!`);
+      else if (state.solo && !ev.correct && state.bots[ev.playerId]) UI.toast(`❌ ${nameOf(ev.playerId)} guessed wrong!`);
     }
   }
 
@@ -308,6 +442,13 @@ $('#btn-quit').onclick = () => location.reload();
 $('#btn-rematch').onclick = () => {
   $('#overlay-end').hidden = true;
   if (state.isHost) {
+    // SOLO: fresh bot brains so they forget last round's deductions
+    if (state.solo) {
+      state.botBusy = false;
+      for (const id of Object.keys(state.bots)) {
+        state.bots[id] = new Bot({ id, deckId: state.deckId, difficulty: state.soloDiff });
+      }
+    }
     state.game = new Game({ deckId: state.deckId, players: state.lobby, twists: state.twists });
     boardBuilt = false;
     pushState();
