@@ -11,6 +11,19 @@ import { Peer } from 'https://esm.sh/peerjs@1.5.4';
 
 const ROOM_PREFIX = 'whoosit-v1-'; // namespacing so codes don't collide with other apps on the broker
 
+// PeerJS / WebRTC config. Multiple public STUN servers improve the odds of a
+// successful peer-to-peer connection across different networks (NAT traversal).
+const PEER_OPTS = {
+  debug: 1,
+  config: {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:global.stun.twilio.com:3478' },
+    ],
+  },
+};
+
 function makeCode() {
   const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; // no I/O for legibility
   let s = '';
@@ -38,7 +51,7 @@ export class Net {
       this.isHost = true;
       this.code = makeCode();
       const peerId = ROOM_PREFIX + this.code;
-      this.peer = new Peer(peerId, { debug: 1 });
+      this.peer = new Peer(peerId, PEER_OPTS);
       this.id = 'host';
 
       this.peer.on('open', () => resolve(this.code));
@@ -47,7 +60,7 @@ export class Net {
         if (err.type === 'unavailable-id') {
           this.code = makeCode();
           this.peer.destroy();
-          this.peer = new Peer(ROOM_PREFIX + this.code, { debug: 1 });
+          this.peer = new Peer(ROOM_PREFIX + this.code, PEER_OPTS);
           this.peer.on('open', () => resolve(this.code));
           this.peer.on('connection', (c) => this._wireHostConn(c));
           this.peer.on('error', reject);
@@ -61,6 +74,11 @@ export class Net {
   }
 
   _wireHostConn(conn) {
+    // Register the connection immediately so it's findable even if a data
+    // message (e.g. 'hello') arrives before the 'open' event fires. Without
+    // this, sendTo() can't find the conn yet and the 'welcome' is dropped,
+    // causing the joiner to time out ("Could not reach that room").
+    this.conns.set(conn.peer, conn);
     conn.on('open', () => {
       this.conns.set(conn.peer, conn);
     });
@@ -81,36 +99,57 @@ export class Net {
     });
   }
 
-  // host: send to one peer
+  // host: send to one peer. If the data channel isn't reported open yet,
+  // wait for its 'open' event and flush then (instead of silently dropping).
   sendTo(peerId, msg) {
     const c = this.conns.get(peerId);
-    if (c && c.open) c.send(msg);
+    if (!c) return;
+    if (c.open) { try { c.send(msg); } catch (e) {} }
+    else { c.once ? c.once('open', () => { try { c.send(msg); } catch (e) {} }) : c.on('open', () => { try { c.send(msg); } catch (e) {} }); }
   }
   // host: send to everyone
   broadcast(msg) {
-    for (const c of this.conns.values()) if (c.open) c.send(msg);
+    for (const c of this.conns.values()) {
+      if (c.open) { try { c.send(msg); } catch (e) {} }
+    }
   }
 
   // ---- PEER ----
   join(code, name) {
     return new Promise((resolve, reject) => {
       this.isHost = false;
-      this.code = code.toUpperCase();
-      this.peer = new Peer({ debug: 1 });
+      // Normalize: strip whitespace/dashes the user may have typed, uppercase.
+      this.code = String(code).replace(/[^a-zA-Z]/g, '').toUpperCase();
+      this.peer = new Peer(PEER_OPTS);
+      let settled = false;
+      let helloTimer = null;
+      let failTimer = null;
+
       this.peer.on('open', (myId) => {
         this.id = myId;
         const conn = this.peer.connect(ROOM_PREFIX + this.code, { reliable: true });
         this.hostConn = conn;
-        let settled = false;
-        const failTimer = setTimeout(() => {
-          if (!settled) { settled = true; reject(new Error('Could not reach that room. Check the code.')); }
-        }, 12000);
+
+        const sendHello = () => { try { conn.send({ t: 'hello', name }); } catch (e) {} };
+
+        // Give the connection longer to complete (cross-network ICE can be slow).
+        failTimer = setTimeout(() => {
+          if (!settled) { settled = true; clearInterval(helloTimer); reject(new Error('Could not reach that room. Check the code.')); }
+        }, 20000);
+
         conn.on('open', () => {
-          conn.send({ t: 'hello', name });
+          sendHello();
+          // The host may not have wired its side in time for the first hello
+          // (open-vs-data race). Re-send hello a few times until welcomed.
+          let tries = 0;
+          helloTimer = setInterval(() => {
+            if (settled || tries++ > 8) { clearInterval(helloTimer); return; }
+            sendHello();
+          }, 1200);
         });
         conn.on('data', (msg) => {
           if (msg.t === 'welcome' && !settled) {
-            settled = true; clearTimeout(failTimer);
+            settled = true; clearTimeout(failTimer); clearInterval(helloTimer);
             this.id = msg.you; // host assigns canonical id
             resolve(msg);
           }
@@ -118,12 +157,20 @@ export class Net {
         });
         conn.on('close', () => this.emit('hostgone'));
         conn.on('error', (e) => {
-          if (!settled) { settled = true; clearTimeout(failTimer); reject(e); }
+          if (!settled) { settled = true; clearTimeout(failTimer); clearInterval(helloTimer); reject(e); }
         });
       });
       this.peer.on('error', (err) => {
-        this.emit('neterror', err);
-        reject(err);
+        // 'peer-unavailable' means the room code doesn't exist on the broker.
+        if (!settled) {
+          settled = true; clearTimeout(failTimer); clearInterval(helloTimer);
+          if (err && err.type === 'peer-unavailable') {
+            reject(new Error('Could not reach that room. Check the code.'));
+          } else {
+            this.emit('neterror', err);
+            reject(err);
+          }
+        }
       });
     });
   }
