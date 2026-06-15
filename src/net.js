@@ -11,10 +11,18 @@ import { Peer } from 'https://esm.sh/peerjs@1.5.4';
 
 const ROOM_PREFIX = 'whoosit-v1-'; // namespacing so codes don't collide with other apps on the broker
 
-// PeerJS / WebRTC config. Multiple public STUN servers improve the odds of a
-// successful peer-to-peer connection across different networks (NAT traversal).
+// PeerJS / WebRTC config.
+// - Pin BOTH host and joiner to the same explicit signaling broker. With the
+//   default (no host) config, PeerJS cloud can route the two players to
+//   different server shards, so the joiner can never find the host's id and
+//   just hangs polling forever (no error). Pinning the host fixes that.
+// - Multiple public STUN servers improve NAT traversal across networks.
 const PEER_OPTS = {
   debug: 1,
+  host: '0.peerjs.com',
+  port: 443,
+  path: '/',
+  secure: true,
   config: {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -125,7 +133,19 @@ export class Net {
       let helloTimer = null;
       let failTimer = null;
 
+      // Overall guard: if the peer never even connects to the broker (e.g. the
+      // signaling server is unreachable on this network), reject instead of
+      // hanging silently with "nothing happens".
+      const openTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          try { this.peer.destroy(); } catch (e) {}
+          reject(new Error('Could not connect to the matchmaking server. Check your internet and try again.'));
+        }
+      }, 15000);
+
       this.peer.on('open', (myId) => {
+        clearTimeout(openTimer);
         this.id = myId;
         const conn = this.peer.connect(ROOM_PREFIX + this.code, { reliable: true });
         this.hostConn = conn;
@@ -163,13 +183,18 @@ export class Net {
       this.peer.on('error', (err) => {
         // 'peer-unavailable' means the room code doesn't exist on the broker.
         if (!settled) {
-          settled = true; clearTimeout(failTimer); clearInterval(helloTimer);
-          if (err && err.type === 'peer-unavailable') {
-            reject(new Error('Could not reach that room. Check the code.'));
+          settled = true; clearTimeout(openTimer); clearTimeout(failTimer); clearInterval(helloTimer);
+          const type = err && err.type;
+          let m;
+          if (type === 'peer-unavailable') {
+            m = 'Could not reach that room. Check the code (and that the host is still in the lobby).';
+          } else if (type === 'network' || type === 'server-error' || type === 'socket-error' || type === 'socket-closed') {
+            m = 'Could not reach the matchmaking server. Your network may be blocking it — try a different network or disable VPN/firewall.';
           } else {
-            this.emit('neterror', err);
-            reject(err);
+            m = (err && err.message) ? err.message : 'Could not join the room. Please try again.';
           }
+          this.emit('neterror', err);
+          reject(new Error(m));
         }
       });
     });
