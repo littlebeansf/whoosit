@@ -14,7 +14,7 @@ const state = {
   isHost: false,
   game: null,            // host only
   lobby: [],             // host: [{id,name}]  — id 'host' for host, peerId for others
-  deckId: 'cryptid',
+  deckId: 'wizards',
   twists: { mutation: true, hunch: true, sabotage: true, suddenGuess: true },
   snap: null,            // latest snapshot (both host & peer render from this)
   myName: 'Detective',

@@ -1,0 +1,842 @@
+{
+  "wizards": [
+    {
+      "id": "w01",
+      "name": "Greybram",
+      "ref": "wise grey pilgrim wizard",
+      "attrs": {
+        "robe": "grey",
+        "beard": "long",
+        "hat": true,
+        "staff": "staff",
+        "familiar": "owl",
+        "glow": "golden"
+      }
+    },
+    {
+      "id": "w02",
+      "name": "Mordecai",
+      "ref": "dark scheming court mage",
+      "attrs": {
+        "robe": "midnight",
+        "beard": "short",
+        "hat": true,
+        "staff": "orb",
+        "familiar": "raven",
+        "glow": "fiery"
+      }
+    },
+    {
+      "id": "w03",
+      "name": "Elowyn",
+      "ref": "kind forest enchantress",
+      "attrs": {
+        "robe": "emerald",
+        "beard": "none",
+        "hat": false,
+        "staff": "wand",
+        "familiar": "cat",
+        "glow": "icy"
+      }
+    },
+    {
+      "id": "w04",
+      "name": "Brakka",
+      "ref": "gruff dwarven runesmith",
+      "attrs": {
+        "robe": "crimson",
+        "beard": "braided",
+        "hat": false,
+        "staff": "tome",
+        "familiar": "none",
+        "glow": "none"
+      }
+    },
+    {
+      "id": "w05",
+      "name": "Sylphine",
+      "ref": "icy young sorceress apprentice",
+      "attrs": {
+        "robe": "midnight",
+        "beard": "none",
+        "hat": true,
+        "staff": "wand",
+        "familiar": "owl",
+        "glow": "icy"
+      }
+    },
+    {
+      "id": "w06",
+      "name": "Old Pell",
+      "ref": "sleepy hedge wizard",
+      "attrs": {
+        "robe": "grey",
+        "beard": "long",
+        "hat": true,
+        "staff": "staff",
+        "familiar": "cat",
+        "glow": "none"
+      }
+    },
+    {
+      "id": "w07",
+      "name": "Vandros",
+      "ref": "fiery battle archmage",
+      "attrs": {
+        "robe": "crimson",
+        "beard": "short",
+        "hat": false,
+        "staff": "staff",
+        "familiar": "raven",
+        "glow": "fiery"
+      }
+    },
+    {
+      "id": "w08",
+      "name": "Iris",
+      "ref": "cheerful star-reading seer",
+      "attrs": {
+        "robe": "emerald",
+        "beard": "none",
+        "hat": true,
+        "staff": "orb",
+        "familiar": "none",
+        "glow": "golden"
+      }
+    },
+    {
+      "id": "w09",
+      "name": "Thornwick",
+      "ref": "cranky swamp witch-doctor",
+      "attrs": {
+        "robe": "midnight",
+        "beard": "braided",
+        "hat": false,
+        "staff": "tome",
+        "familiar": "raven",
+        "glow": "none"
+      }
+    },
+    {
+      "id": "w10",
+      "name": "Marigold",
+      "ref": "warm grandmother healer mage",
+      "attrs": {
+        "robe": "crimson",
+        "beard": "none",
+        "hat": false,
+        "staff": "wand",
+        "familiar": "cat",
+        "glow": "golden"
+      }
+    },
+    {
+      "id": "w11",
+      "name": "Fenwise",
+      "ref": "scholarly bespectacled wizard",
+      "attrs": {
+        "robe": "grey",
+        "beard": "short",
+        "hat": true,
+        "staff": "tome",
+        "familiar": "owl",
+        "glow": "icy"
+      }
+    },
+    {
+      "id": "w12",
+      "name": "Zalindra",
+      "ref": "glamorous high sorceress",
+      "attrs": {
+        "robe": "midnight",
+        "beard": "none",
+        "hat": true,
+        "staff": "orb",
+        "familiar": "cat",
+        "glow": "fiery"
+      }
+    },
+    {
+      "id": "w13",
+      "name": "Grumthar",
+      "ref": "stout grumpy mountain mage",
+      "attrs": {
+        "robe": "emerald",
+        "beard": "braided",
+        "hat": false,
+        "staff": "staff",
+        "familiar": "none",
+        "glow": "fiery"
+      }
+    },
+    {
+      "id": "w14",
+      "name": "Lumen",
+      "ref": "glowing celestial boy wizard",
+      "attrs": {
+        "robe": "grey",
+        "beard": "none",
+        "hat": false,
+        "staff": "wand",
+        "familiar": "owl",
+        "glow": "golden"
+      }
+    },
+    {
+      "id": "w15",
+      "name": "Crowe",
+      "ref": "mysterious hooded necromancer",
+      "attrs": {
+        "robe": "midnight",
+        "beard": "long",
+        "hat": false,
+        "staff": "staff",
+        "familiar": "raven",
+        "glow": "icy"
+      }
+    },
+    {
+      "id": "w16",
+      "name": "Bramblefae",
+      "ref": "tiny mischievous pixie-mage",
+      "attrs": {
+        "robe": "emerald",
+        "beard": "none",
+        "hat": true,
+        "staff": "wand",
+        "familiar": "none",
+        "glow": "none"
+      }
+    }
+  ],
+  "toons": [
+    {
+      "id": "t01",
+      "name": "Porkó",
+      "ref": "lovable goofy warthog",
+      "attrs": {
+        "kind": "warthog",
+        "color": "brown",
+        "teeth": true,
+        "headgear": "none",
+        "feet": "barefoot",
+        "face": "goofy"
+      }
+    },
+    {
+      "id": "t02",
+      "name": "Bubbert",
+      "ref": "happy square yellow sea sponge",
+      "attrs": {
+        "kind": "sea-critter",
+        "color": "yellow",
+        "teeth": true,
+        "headgear": "none",
+        "feet": "sneakers",
+        "face": "happy"
+      }
+    },
+    {
+      "id": "t03",
+      "name": "Quickdraw",
+      "ref": "sharpshooting cowboy hero",
+      "attrs": {
+        "kind": "cowboy",
+        "color": "blue",
+        "teeth": false,
+        "headgear": "cowboy-hat",
+        "feet": "boots",
+        "face": "happy"
+      }
+    },
+    {
+      "id": "t04",
+      "name": "Stareez",
+      "ref": "dim pink starfish buddy",
+      "attrs": {
+        "kind": "sea-critter",
+        "color": "pink",
+        "teeth": false,
+        "headgear": "none",
+        "feet": "barefoot",
+        "face": "goofy"
+      }
+    },
+    {
+      "id": "t05",
+      "name": "Bandit Bo",
+      "ref": "sneaky cartoon bank robber",
+      "attrs": {
+        "kind": "cowboy",
+        "color": "brown",
+        "teeth": false,
+        "headgear": "cowboy-hat",
+        "feet": "boots",
+        "face": "sneaky"
+      }
+    },
+    {
+      "id": "t06",
+      "name": "Sunny",
+      "ref": "cheery yellow chick critter",
+      "attrs": {
+        "kind": "critter",
+        "color": "yellow",
+        "teeth": false,
+        "headgear": "bow",
+        "feet": "barefoot",
+        "face": "happy"
+      }
+    },
+    {
+      "id": "t07",
+      "name": "Tuskan",
+      "ref": "grumpy big-tusked warthog",
+      "attrs": {
+        "kind": "warthog",
+        "color": "brown",
+        "teeth": true,
+        "headgear": "cap",
+        "feet": "boots",
+        "face": "angry"
+      }
+    },
+    {
+      "id": "t08",
+      "name": "Squidly",
+      "ref": "cranky blue octopus neighbor",
+      "attrs": {
+        "kind": "sea-critter",
+        "color": "blue",
+        "teeth": false,
+        "headgear": "none",
+        "feet": "flippers",
+        "face": "angry"
+      }
+    },
+    {
+      "id": "t09",
+      "name": "Pearl",
+      "ref": "sweet pink seahorse girl",
+      "attrs": {
+        "kind": "sea-critter",
+        "color": "pink",
+        "teeth": false,
+        "headgear": "bow",
+        "feet": "flippers",
+        "face": "happy"
+      }
+    },
+    {
+      "id": "t10",
+      "name": "Rusty",
+      "ref": "goofy young cowpoke sidekick",
+      "attrs": {
+        "kind": "cowboy",
+        "color": "yellow",
+        "teeth": true,
+        "headgear": "cowboy-hat",
+        "feet": "boots",
+        "face": "goofy"
+      }
+    },
+    {
+      "id": "t11",
+      "name": "Whiskers",
+      "ref": "sneaky alley-cat trickster",
+      "attrs": {
+        "kind": "critter",
+        "color": "blue",
+        "teeth": false,
+        "headgear": "cap",
+        "feet": "sneakers",
+        "face": "sneaky"
+      }
+    },
+    {
+      "id": "t12",
+      "name": "Bonk",
+      "ref": "big dumb brown gorilla pal",
+      "attrs": {
+        "kind": "critter",
+        "color": "brown",
+        "teeth": false,
+        "headgear": "none",
+        "feet": "barefoot",
+        "face": "goofy"
+      }
+    },
+    {
+      "id": "t13",
+      "name": "Daisy Mae",
+      "ref": "spunky pink cowgirl",
+      "attrs": {
+        "kind": "cowboy",
+        "color": "pink",
+        "teeth": false,
+        "headgear": "cowboy-hat",
+        "feet": "boots",
+        "face": "happy"
+      }
+    },
+    {
+      "id": "t14",
+      "name": "Gilbert",
+      "ref": "nerdy yellow fish in glasses",
+      "attrs": {
+        "kind": "sea-critter",
+        "color": "yellow",
+        "teeth": true,
+        "headgear": "none",
+        "feet": "flippers",
+        "face": "goofy"
+      }
+    },
+    {
+      "id": "t15",
+      "name": "Hambone",
+      "ref": "sneaky greedy pink piglet",
+      "attrs": {
+        "kind": "warthog",
+        "color": "pink",
+        "teeth": true,
+        "headgear": "cap",
+        "feet": "sneakers",
+        "face": "sneaky"
+      }
+    },
+    {
+      "id": "t16",
+      "name": "Scrappy",
+      "ref": "feisty little brown dog",
+      "attrs": {
+        "kind": "critter",
+        "color": "brown",
+        "teeth": false,
+        "headgear": "bow",
+        "feet": "sneakers",
+        "face": "angry"
+      }
+    }
+  ],
+  "heroes": [
+    {
+      "id": "x01",
+      "name": "Ironheart",
+      "ref": "armored flying tech hero in red and gold suit",
+      "attrs": {
+        "suit": "gold",
+        "power": "armor",
+        "cape": false,
+        "mask": "helmet",
+        "emblem": "bolt",
+        "hair": "hidden"
+      }
+    },
+    {
+      "id": "x02",
+      "name": "Lady Valor",
+      "ref": "warrior princess hero with tiara and gold cuffs",
+      "attrs": {
+        "suit": "red",
+        "power": "strength",
+        "cape": true,
+        "mask": "none",
+        "emblem": "star",
+        "hair": "black"
+      }
+    },
+    {
+      "id": "x03",
+      "name": "The Titan",
+      "ref": "huge raging green muscle hero",
+      "attrs": {
+        "suit": "green",
+        "power": "strength",
+        "cape": false,
+        "mask": "none",
+        "emblem": "none",
+        "hair": "black"
+      }
+    },
+    {
+      "id": "x04",
+      "name": "Skyfist",
+      "ref": "classic flying blue caped strongman",
+      "attrs": {
+        "suit": "blue",
+        "power": "flight",
+        "cape": true,
+        "mask": "none",
+        "emblem": "shield",
+        "hair": "black"
+      }
+    },
+    {
+      "id": "x05",
+      "name": "Nightwing",
+      "ref": "brooding gadget vigilante in dark suit",
+      "attrs": {
+        "suit": "blue",
+        "power": "gadgets",
+        "cape": true,
+        "mask": "full",
+        "emblem": "none",
+        "hair": "hidden"
+      }
+    },
+    {
+      "id": "x06",
+      "name": "Captain Bolt",
+      "ref": "fast red speedster hero",
+      "attrs": {
+        "suit": "red",
+        "power": "gadgets",
+        "cape": false,
+        "mask": "full",
+        "emblem": "bolt",
+        "hair": "hidden"
+      }
+    },
+    {
+      "id": "x07",
+      "name": "Goldguard",
+      "ref": "patriotic shield-bearing soldier hero",
+      "attrs": {
+        "suit": "blue",
+        "power": "strength",
+        "cape": false,
+        "mask": "domino",
+        "emblem": "star",
+        "hair": "blonde"
+      }
+    },
+    {
+      "id": "x08",
+      "name": "Verdant",
+      "ref": "plant-powered green nature heroine",
+      "attrs": {
+        "suit": "green",
+        "power": "gadgets",
+        "cape": true,
+        "mask": "domino",
+        "emblem": "none",
+        "hair": "red"
+      }
+    },
+    {
+      "id": "x09",
+      "name": "Solara",
+      "ref": "glowing golden flying sun heroine",
+      "attrs": {
+        "suit": "gold",
+        "power": "flight",
+        "cape": true,
+        "mask": "none",
+        "emblem": "star",
+        "hair": "blonde"
+      }
+    },
+    {
+      "id": "x10",
+      "name": "Gearjaw",
+      "ref": "bulky armored gadget hero",
+      "attrs": {
+        "suit": "red",
+        "power": "armor",
+        "cape": false,
+        "mask": "helmet",
+        "emblem": "shield",
+        "hair": "hidden"
+      }
+    },
+    {
+      "id": "x11",
+      "name": "Mistral",
+      "ref": "wind-flying blue caped heroine",
+      "attrs": {
+        "suit": "blue",
+        "power": "flight",
+        "cape": true,
+        "mask": "domino",
+        "emblem": "bolt",
+        "hair": "blonde"
+      }
+    },
+    {
+      "id": "x12",
+      "name": "Ember",
+      "ref": "fiery red-haired flame hero",
+      "attrs": {
+        "suit": "red",
+        "power": "flight",
+        "cape": false,
+        "mask": "none",
+        "emblem": "none",
+        "hair": "red"
+      }
+    },
+    {
+      "id": "x13",
+      "name": "Bulwark",
+      "ref": "rocky armored green tank hero",
+      "attrs": {
+        "suit": "green",
+        "power": "armor",
+        "cape": false,
+        "mask": "helmet",
+        "emblem": "shield",
+        "hair": "hidden"
+      }
+    },
+    {
+      "id": "x14",
+      "name": "Quickfox",
+      "ref": "agile masked acrobat heroine",
+      "attrs": {
+        "suit": "gold",
+        "power": "gadgets",
+        "cape": false,
+        "mask": "domino",
+        "emblem": "bolt",
+        "hair": "red"
+      }
+    },
+    {
+      "id": "x15",
+      "name": "Atlas",
+      "ref": "golden caped flying strongman",
+      "attrs": {
+        "suit": "gold",
+        "power": "strength",
+        "cape": true,
+        "mask": "none",
+        "emblem": "shield",
+        "hair": "blonde"
+      }
+    },
+    {
+      "id": "x16",
+      "name": "Shade",
+      "ref": "stealthy dark caped martial hero",
+      "attrs": {
+        "suit": "green",
+        "power": "gadgets",
+        "cape": true,
+        "mask": "full",
+        "emblem": "star",
+        "hair": "hidden"
+      }
+    }
+  ],
+  "villains": [
+    {
+      "id": "v01",
+      "name": "Lord Vesper",
+      "ref": "pale snake-faced bald dark lord",
+      "attrs": {
+        "skin": "pale",
+        "hair": "bald",
+        "cape": true,
+        "weapon": "staff",
+        "scar": false,
+        "grin": "cold"
+      }
+    },
+    {
+      "id": "v02",
+      "name": "Skullface",
+      "ref": "grey skull-masked overlord",
+      "attrs": {
+        "skin": "grey",
+        "hair": "horned-helm",
+        "cape": true,
+        "weapon": "staff",
+        "scar": false,
+        "grin": "scowl"
+      }
+    },
+    {
+      "id": "v03",
+      "name": "Grinjaw",
+      "ref": "pale grinning clown-anarchist villain",
+      "attrs": {
+        "skin": "pale",
+        "hair": "wild",
+        "cape": false,
+        "weapon": "none",
+        "scar": true,
+        "grin": "grin"
+      }
+    },
+    {
+      "id": "v04",
+      "name": "Madame Venom",
+      "ref": "green-skinned glamorous poison sorceress",
+      "attrs": {
+        "skin": "green",
+        "hair": "slick",
+        "cape": true,
+        "weapon": "staff",
+        "scar": false,
+        "grin": "sneer"
+      }
+    },
+    {
+      "id": "v05",
+      "name": "Brute Crank",
+      "ref": "huge red armored brute villain",
+      "attrs": {
+        "skin": "red",
+        "hair": "bald",
+        "cape": false,
+        "weapon": "claws",
+        "scar": true,
+        "grin": "scowl"
+      }
+    },
+    {
+      "id": "v06",
+      "name": "Doctor Hex",
+      "ref": "green masked mad-scientist villain",
+      "attrs": {
+        "skin": "green",
+        "hair": "slick",
+        "cape": true,
+        "weapon": "blaster",
+        "scar": false,
+        "grin": "cold"
+      }
+    },
+    {
+      "id": "v07",
+      "name": "Razorback",
+      "ref": "grey clawed mutant brawler",
+      "attrs": {
+        "skin": "grey",
+        "hair": "wild",
+        "cape": false,
+        "weapon": "claws",
+        "scar": true,
+        "grin": "sneer"
+      }
+    },
+    {
+      "id": "v08",
+      "name": "The Baroness",
+      "ref": "pale slick-haired cold aristocrat villain",
+      "attrs": {
+        "skin": "pale",
+        "hair": "slick",
+        "cape": true,
+        "weapon": "none",
+        "scar": false,
+        "grin": "cold"
+      }
+    },
+    {
+      "id": "v09",
+      "name": "Magmar",
+      "ref": "red fiery horned demon lord",
+      "attrs": {
+        "skin": "red",
+        "hair": "horned-helm",
+        "cape": true,
+        "weapon": "claws",
+        "scar": false,
+        "grin": "grin"
+      }
+    },
+    {
+      "id": "v10",
+      "name": "Zilch",
+      "ref": "grey sneaky goblin henchman",
+      "attrs": {
+        "skin": "grey",
+        "hair": "wild",
+        "cape": false,
+        "weapon": "blaster",
+        "scar": false,
+        "grin": "sneer"
+      }
+    },
+    {
+      "id": "v11",
+      "name": "Nightshade",
+      "ref": "pale gothic caped vampire villain",
+      "attrs": {
+        "skin": "pale",
+        "hair": "slick",
+        "cape": true,
+        "weapon": "none",
+        "scar": false,
+        "grin": "sneer"
+      }
+    },
+    {
+      "id": "v12",
+      "name": "Krang Prime",
+      "ref": "green brain-faced alien overlord",
+      "attrs": {
+        "skin": "green",
+        "hair": "bald",
+        "cape": false,
+        "weapon": "blaster",
+        "scar": false,
+        "grin": "cold"
+      }
+    },
+    {
+      "id": "v13",
+      "name": "Scorchscar",
+      "ref": "red half-burned scarred warlord",
+      "attrs": {
+        "skin": "red",
+        "hair": "slick",
+        "cape": true,
+        "weapon": "staff",
+        "scar": true,
+        "grin": "scowl"
+      }
+    },
+    {
+      "id": "v14",
+      "name": "Bonelord",
+      "ref": "pale skeletal horned necro-king",
+      "attrs": {
+        "skin": "pale",
+        "hair": "horned-helm",
+        "cape": true,
+        "weapon": "staff",
+        "scar": false,
+        "grin": "grin"
+      }
+    },
+    {
+      "id": "v15",
+      "name": "Sludge",
+      "ref": "green oozing toxic blob villain",
+      "attrs": {
+        "skin": "green",
+        "hair": "bald",
+        "cape": false,
+        "weapon": "claws",
+        "scar": false,
+        "grin": "grin"
+      }
+    },
+    {
+      "id": "v16",
+      "name": "General Iron",
+      "ref": "grey horned-helm armored war general",
+      "attrs": {
+        "skin": "grey",
+        "hair": "horned-helm",
+        "cape": false,
+        "weapon": "blaster",
+        "scar": true,
+        "grin": "scowl"
+      }
+    }
+  ]
+}

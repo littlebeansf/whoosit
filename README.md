@@ -1,6 +1,8 @@
 # WHO-O-SITT? 🔍👹
 
-A weird, modern take on the classic **Guess Who?** board game. Play **solo against AI detectives**, or go head-to-head with **2–4 players** over your local network (or the internet). Flip the tiles, ask the questions, unmask the monster.
+A bold pop-art take on the classic **Guess Who?** board game. Play **solo against AI detectives**, or go head-to-head with **2–4 players** over your local network (or the internet). Flip the tiles, ask the questions, unmask the character.
+
+All 64 characters are **original pop-art portraits** (retro comic / Ben-Day halftone style) — strong nods to famous fantasy, cartoon, superhero and villain archetypes, deliberately drawn to be legally safe and not copies of any protected design.
 
 **Funny-but-modern cartoon art. Real board-game flip animations. Original twists that keep it from playing 1:1 like the original.**
 
@@ -50,17 +52,18 @@ All twists (mutation rounds, hunch tokens, sabotage, sudden guess) are toggleabl
 
 ## The game
 
-You're each secretly assigned **one hidden identity** from the deck. On your turn you ask **one yes/no question** about a trait ("Does your cryptid have horns?"). Based on the answer you **flip down** the tiles that don't match — the satisfying board-game *clack*. First to correctly **accuse** an opponent's exact character wins.
+You're each secretly assigned **one hidden identity** from the deck. On your turn you ask **one yes/no question** about a trait ("Does your character wear a cape?"). Based on the answer you **flip down** the tiles that don't match — the satisfying board-game *clack*. First to correctly **accuse** an opponent's exact character wins.
 
 ### Decks (categories)
 
-Each deck has its own cast of 16 and its own set of traits:
+Four decks, each with its own cast of 16 original characters, its own accent colour, and its own set of six traits:
 
 | Deck | Vibe | Traits |
 |------|------|--------|
-| **Cryptid Precinct** 🟢 | Cryptids & monsters (flagship, hand-made art) | pelt colour · # of eyes · horns · habitat · mood · accessory |
-| **Space Bureaucrats** 🟣 | Aliens working office jobs | skin hue · antennae · tentacles · job · eyewear · snack |
-| **Haunted B&B** 🔵 | Friendly-ish ghosts & ghouls | ectoplasm · transparency · chains · headwear · era · vibe |
+| **Order of the Misty Tower** 🟣 | Wizards & sorcerers (Gandalf / Voldemort-style archetypes) | robe colour · beard · pointed hat · magic item · familiar · aura |
+| **Saturday Morning Mayhem** 🟡 | Goofy cartoon critters (SpongeBob / Pumbaa / Lucky Luke-style) | creature kind · main colour · buck teeth · headgear · footwear · expression |
+| **The Justice Bureau** 🔴 | Caped superheroes (Iron Man / Wonder Woman / Hulk-style) | suit colour · power · cape · mask · emblem · hair |
+| **The Legion of Gloom** 🔵 | Supervillains (dark-lord / mad-scientist / evil-clown archetypes) | skin · hair · cape · weapon · scar · grin |
 
 ### The twists (not a 1:1 copy)
 
@@ -93,7 +96,7 @@ Other devices on the same Wi-Fi can reach your machine at `http://<your-local-ip
 - **Vanilla JS**, plain ES modules — no bundler, deploys clean to GitHub Pages.
 - **PeerJS** (WebRTC P2P) loaded from CDN for serverless multiplayer.
 - **CSS 3D transforms** for the board-game flip/tilt animations (60fps).
-- Generated **transparent PNG portraits** for the cryptid cast, composited onto CSS tiles.
+- Generated **transparent pop-art PNG portraits** for all four casts (64 characters), composited onto CSS tiles.
 
 ### Project structure
 
@@ -102,7 +105,7 @@ whoosit/
 ├── index.html          # all screens (menu, host, join, lobby, game, overlays)
 ├── styles.css          # design tokens + board-game flip animations
 ├── src/
-│   ├── data/decks.js   # 3 decks × 16 characters, each with its own traits
+│   ├── data/decks.js   # 4 decks × 16 characters, each with its own traits
 │   ├── net.js          # WebRTC P2P (PeerJS)
 │   ├── engine.js       # host-authoritative game logic + twists
 │   ├── bot.js          # AI opponent brain (solo / Play vs AI mode)
@@ -112,7 +115,10 @@ whoosit/
 │   ├── sim_bot.mjs     # headless bot-vs-bot game simulator
 │   └── winrate.mjs     # head-to-head difficulty win-rate tester
 ├── assets/
-│   ├── cryptid/        # c01–c16 character portraits
+│   ├── wizards/        # w01–w16 wizard portraits
+│   ├── toons/          # t01–t16 cartoon-critter portraits
+│   ├── heroes/         # x01–x16 superhero portraits
+│   ├── villains/       # v01–v16 supervillain portraits
 │   └── ui/             # cover art, favicon
 └── DESIGN.md           # full design doc
 ```
@@ -121,6 +127,6 @@ whoosit/
 
 ## Credits
 
-Designed & built by **Sebastian Fries**. Character art generated to a consistent cartoon style. Inspired by — but deliberately not a copy of — the classic *Guess Who?* board game.
+Designed & built by **Sebastian Fries**. Character art generated in a consistent retro comic / pop-art style — original characters that evoke famous archetypes without copying any protected design. Inspired by — but deliberately not a copy of — the classic *Guess Who?* board game.
 
 MIT License.

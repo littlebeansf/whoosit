@@ -28,7 +28,7 @@ function mulberry32(seed) {
 }
 
 export class Game {
-  constructor({ deckId = 'cryptid', players, twists }) {
+  constructor({ deckId = 'wizards', players, twists }) {
     this.deck = DECKS[deckId];
     this.deckId = deckId;
     this.seed = (Math.random() * 1e9) | 0;

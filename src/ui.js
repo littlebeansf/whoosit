@@ -13,12 +13,11 @@ export const screens = {
 const SEAT_COLORS = ['#b6ff3b', '#ff5cc8', '#54f0e8', '#ffc83d'];
 
 export function artUrl(deckId, charId) {
-  // only cryptid has bespoke art; others fall back to a tinted silhouette generated on the fly
-  if (deckId === 'cryptid') return `./assets/cryptid/${charId}.png`;
-  return null;
+  // every deck ships bespoke pop-art portraits at assets/<deckId>/<charId>.png
+  return `./assets/${deckId}/${charId}.png`;
 }
 
-// procedurally render a placeholder portrait for decks without bespoke art (space, haunted)
+// procedurally render a placeholder portrait as a fallback if a bespoke art file fails to load
 export function placeholderDataUrl(deck, char) {
   const c = document.createElement('canvas');
   c.width = c.height = 256;
@@ -342,10 +341,10 @@ export function renderHow() {
   $('#how-body').innerHTML = `
     <p>WHO-O-SITT is a weird twist on the classic “who am I?” guessing game for <b>2–4 players</b>.</p>
     <h4>Goal</h4>
-    <p>Everyone is secretly dealt one monster identity. Be the first to correctly <b>unmask</b> a rival's secret monster.</p>
+    <p>Everyone is secretly dealt one character identity. Be the first to correctly <b>unmask</b> a rival's secret character.</p>
     <h4>On your turn</h4>
     <ul>
-      <li>Ask one <b>yes/no question</b> about a trait (“Does your monster have horns?”).</li>
+      <li>Ask one <b>yes/no question</b> about a trait (“Does your character wear a cape?”).</li>
       <li>Read the answer, then <b>flip down</b> every suspect on your board that doesn't match — that's the satisfying clack.</li>
       <li>End your turn, or make an accusation.</li>
     </ul>
