@@ -191,7 +191,7 @@ input{font:inherit;color:inherit}
 /* ----- TILE: the board-game flip ----- */
 .tile{position:relative;aspect-ratio:1;border-radius:var(--radius-md);
   transform-style:preserve-3d;transition:transform .55s var(--ease);
-  cursor:pointer;transform-origin:center top;}
+  cursor:pointer;transform-origin:center center;}
 .tile .face,.tile .back{position:absolute;inset:0;border-radius:var(--radius-md);backface-visibility:hidden;overflow:hidden}
 .tile .face{
   background:linear-gradient(160deg,var(--tile),var(--tile-edge));
